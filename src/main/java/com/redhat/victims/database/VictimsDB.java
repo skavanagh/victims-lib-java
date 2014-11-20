@@ -70,6 +70,10 @@ public class VictimsDB {
         return defaultURL(defaultDriver());
     }
 
+    public static String dbUpdate() {
+        return VictimsConfig.dbUpdate();
+    }
+
     /**
      * Fetches an instance implementing {@link VictimsDBInterface} using the
      * configured driver.

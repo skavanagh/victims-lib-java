@@ -46,6 +46,11 @@ public class VictimsConfig {
     protected static String DEFAULT_ALGORITHM_STRING = "SHA512";
     public static final HashMap<String, String> DEFAULT_PROPS = new HashMap<String, String>();
 
+    protected static final String DB_UPDATE_AUTO="auto";
+    protected static final String DB_UPDATE_DAILY="daily";
+    protected static final String DB_UPDATE_WEEKLY="weekly";
+    protected static final String DB_UPDATE_OFFLINE="offline";
+
     static {
         DEFAULT_PROPS.put(Key.URI, "http://www.victi.ms/");
         DEFAULT_PROPS.put(Key.ENTRY, "service/");
@@ -56,6 +61,7 @@ public class VictimsConfig {
         DEFAULT_PROPS.put(Key.DB_DRIVER, VictimsDB.defaultDriver());
         DEFAULT_PROPS.put(Key.DB_USER, "victims");
         DEFAULT_PROPS.put(Key.DB_PASS, "victims");
+        DEFAULT_PROPS.put(Key.DB_UPDATE, DB_UPDATE_AUTO);
     }
 
     public static Algorithms getDefaultAlgorithm() {
@@ -232,6 +238,26 @@ public class VictimsConfig {
         return Boolean.getBoolean(Key.PURGE_CACHE);
     }
 
+    public static boolean updateAlways() {
+        return DB_UPDATE_AUTO.equalsIgnoreCase(getPropertyValue(Key.DB_UPDATE));
+    }
+
+    public static boolean updateWeekly() {
+        return DB_UPDATE_WEEKLY.equalsIgnoreCase(getPropertyValue(Key.DB_UPDATE));
+    }
+
+    public static boolean updateDaily() {
+        return DB_UPDATE_DAILY.equalsIgnoreCase(getPropertyValue(Key.DB_UPDATE));
+    }
+
+    public static boolean updateOffline() {
+        return DB_UPDATE_OFFLINE.equalsIgnoreCase(getPropertyValue(Key.DB_UPDATE));
+    }
+
+    public static String dbUpdate() {
+        return getPropertyValue(Key.DB_UPDATE);
+    }
+
     /**
      * This class contains system property keys that are used to configure
      * victims.
@@ -251,6 +277,7 @@ public class VictimsConfig {
         public static final String DB_USER = "victims.db.user";
         public static final String DB_PASS = "victims.db.pass";
         public static final String DB_PURGE = "victims.db.purge";
+        public static final String DB_UPDATE = "victims.db.updates";
     }
 
 }

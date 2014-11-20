@@ -198,6 +198,39 @@ public class VictimsSqlDB extends VictimsSQL implements VictimsDBInterface {
     }
 
     public void synchronize() throws VictimsException {
+        Date updated = lastUpdated();
+
+        if(!VictimsConfig.updateOffline()) {
+            if (VictimsConfig.updateDaily()) {
+
+                Date today = new Date();
+                SimpleDateFormat cmp = new SimpleDateFormat("yyyyMMdd");
+                boolean updatedToday = cmp.format(today).equals(cmp.format(updated));
+
+                if (!updatedToday) {
+                    synchronize(updated);
+                }
+
+            // update weekly
+            } else if (VictimsConfig.updateWeekly()) {
+
+                Date today = new Date();
+                SimpleDateFormat cmp = new SimpleDateFormat("yyyyw");
+                if (!cmp.format(today).equals(cmp.format(updated))) {
+                    synchronize(updated);
+                }
+
+            // update automatically every time
+            } else {
+                synchronize(updated);
+            }
+        }
+
+    }
+
+
+
+    public void synchronize(Date since) throws VictimsException {
         Throwable throwable = null;
         try {
             Connection connection = getConnection();
@@ -206,7 +239,6 @@ public class VictimsSqlDB extends VictimsSQL implements VictimsDBInterface {
 
             try {
                 VictimsService service = new VictimsService();
-                Date since = lastUpdated();
 
                 int removed = remove(connection, service.removed(since));
                 int updated = update(connection, service.updates(since));
